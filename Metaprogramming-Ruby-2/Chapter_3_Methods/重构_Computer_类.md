@@ -132,12 +132,12 @@ class Computer
 
   # 由 Computer 代理，转发给真正相应 get_x_info 方法的 data
   def method_missing(method_name)
-  	info_method = "get_#{method_name}_info"
-  	price_method = "get_#{method_name}_price"
-  	super if !@data.respond_to?(info_method)
-  	info = @data.send info_method, @id
-  	price = @data.send price_method, @id
-  	"#{info} - #{price}"
+    info_method = "get_#{method_name}_info"
+    price_method = "get_#{method_name}_price"
+    super if !@data.respond_to?(info_method)
+    info = @data.send info_method, @id
+    price = @data.send price_method, @id
+    "#{info} - #{price}"
   end
 end
 ```
