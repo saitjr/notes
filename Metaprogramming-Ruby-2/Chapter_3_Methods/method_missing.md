@@ -62,12 +62,12 @@ end
 
 ```ruby
 class ModelProxy
-	attr_reader :sql_obj
+  attr_reader :sql_obj
 
-	def self.find_by(*options)
-		@sql_obj = SQLLayer.new.get_obj(self.class.name, options)
+  def self.find_by(*options)
+    @sql_obj = SQLLayer.new.get_obj(self.class.name, options)
     self.new
-	end
+  end
 
   def method_missing(method_name, *args)
     @sql_obj.send method_name
@@ -75,9 +75,9 @@ class ModelProxy
 end
 
 class SQLLayer
-	def get_obj(t, *where)
-		`SELECT * FROM #{t} WHERE #{where}`
-	end
+  def get_obj(t, *where)
+    `SELECT * FROM #{t} WHERE #{where}`
+  end
 end
 
 class User < ModelProxy
@@ -112,7 +112,7 @@ user.respond_to?(:name) # => false
 ```ruby
 class User
   def respond_to_missing?(method_name, *args)
-  	return true if method_name == :name
+    return true if method_name == :name
     super
   end
 end

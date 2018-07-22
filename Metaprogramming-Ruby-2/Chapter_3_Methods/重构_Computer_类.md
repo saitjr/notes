@@ -125,7 +125,7 @@ end
 
 ```ruby
 class Computer
-	def initialize(id, data)
+  def initialize(id, data)
     @id = id
     @data = data
   end
