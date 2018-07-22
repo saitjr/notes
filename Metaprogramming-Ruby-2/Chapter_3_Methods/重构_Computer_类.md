@@ -116,9 +116,5 @@ class Computer
       "#{info} - #{price}"
     end
   end
-
-  define_component :mouse
-  define_component :cpu
-  define_component :keyboard
 end
 ```
