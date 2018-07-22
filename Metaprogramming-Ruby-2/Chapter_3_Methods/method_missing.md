@@ -69,7 +69,7 @@ class ModelProxy
     self.new
 	end
 
-  def method_missing(method_name)
+  def method_missing(method_name, *args)
     @sql_obj.send method_name
   end
 end
@@ -91,7 +91,65 @@ user.email # => 同 name 属性
 
 ## 注意事项
 
-### 1. `response_to?`
+### 1. `respond_to?`
 
+如果用 `method_missing` 的方式动态代理了某个方法，如 `user.name`。此时，`respond_to` 会始终返回 `false`。
 
-### 2. 继承自 `Object` 带来的污染
+```ruby
+class User
+  def method_missing(method_name, *args)
+    super if method_name != :name
+    "saitjr"
+  end
+end
+
+user = User.new
+user.respond_to?(:name) # => false
+```
+
+正确的做法是，实现 `respond_to_missing?` 方法，并给对应的方法返回 `true`：
+
+```ruby
+class User
+  def respond_to_missing?(method_name, *args)
+  	return true if method_name == :name
+    super
+  end
+end
+
+user.respond_to?(:name) # => true
+```
+
+### 2. 被遗忘的 `super`
+
+无论是重现 `method_missing` 还是 `respond_to_missing?`，都不要忘记在不满足特定条件时，call super。确保能返回正确的值，或及时抛出异常。
+
+### 3. 死循环
+
+在重写 `method_missing` 的时候，小心在 `method_missing` 又调用了不存在的方法，而出现死循环。
+
+```ruby
+class User
+  def method_missing(method_name, *args)
+    send :my_email if method_name == :email
+  end
+end
+
+User.new.email
+```
+
+### 4. 继承自 `Object` 带来的污染
+
+如果不显式指定父类，对象将会继承自 `Object`。此时，如果调用如 `display` 这类 `Object` 的方法，并不会执行 `method_missing`，导致出现比较隐蔽的 bug。
+
+```ruby
+class User
+  def method_missing(method_name, *args)
+    puts "call method missing"
+  end
+end
+
+User.new.display # => 不会输出 call method missing
+```
+
+对此，Objective-C 的 `NSProxy` 更贴切。在 Ruby 中，应该显式继承 `BasicObject`，并且 `undef_method`，删除可能会造成冲突的方法。

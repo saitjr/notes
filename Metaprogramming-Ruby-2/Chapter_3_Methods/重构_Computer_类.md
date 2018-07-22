@@ -10,20 +10,20 @@ class Computer
   end
 
   def mouse
-    info = data.get_mouse_info(@id)
-    price = data.get_mouse_price(@id)
+    info = @data.get_mouse_info(@id)
+    price = @data.get_mouse_price(@id)
     return "#{info} - #{price}"
   end
 
   def cpu
-    info = data.get_cpu_info(@id)
-    price = data.get_cpu_price(@id)
+    info = @data.get_cpu_info(@id)
+    price = @data.get_cpu_price(@id)
     return "#{info} - #{price}"
   end
 
   def keyboard
-    info = data.get_keyboard_info(@id)
-    price = data.get_keyboard_price(@id)
+    info = @data.get_keyboard_info(@id)
+    price = @data.get_keyboard_price(@id)
     return "#{info} - #{price}"
   end
 
@@ -56,8 +56,8 @@ class Computer
   end
 
   def get_component_info(name)
-    info = data.send "get_#{name}_info", @id
-    price = data.send "get_#{name}_price", @id
+    info = @data.send "get_#{name}_info", @id
+    price = @data.send "get_#{name}_price", @id
     "#{info} - #{price}"
   end
 end
@@ -95,7 +95,7 @@ end
 
 反射（Reflective）：能在运行时动态修改程序结构，如动态方法调用、实现，创建新的对象等。
 
-内省（Introspection）：能在运行时动态查看自身属性，如 `response_to?`，`instance_of?` 等。
+内省（Introspection）：能在运行时动态查看自身属性，如 `respond_to?`，`instance_of?` 等。
 
 ```ruby
 class Computer
@@ -131,7 +131,7 @@ class Computer
   end
 
   # 由 Computer 代理，转发给真正相应 get_x_info 方法的 data
-  def method_missing(method_name)
+  def method_missing(method_name, *args)
     info_method = "get_#{method_name}_info"
     price_method = "get_#{method_name}_price"
     super if !@data.respond_to?(info_method)
