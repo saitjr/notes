@@ -118,3 +118,26 @@ class Computer
   end
 end
 ```
+
+## v4.0 利用动态代理，直接转发
+
+动态代理 ———— 捕获幽灵方法（Ghost Method），并转发给另一个对象的中间代理。
+
+```ruby
+class Computer
+	def initialize(id, data)
+    @id = id
+    @data = data
+  end
+
+  # 由 Computer 代理，转发给真正相应 get_x_info 方法的 data
+  def method_missing(method_name)
+  	info_method = "get_#{method_name}_info"
+  	price_method = "get_#{method_name}_price"
+  	super if !@data.respond_to?(info_method)
+  	info = @data.send info_method, @id
+  	price = @data.send price_method, @id
+  	"#{info} - #{price}"
+  end
+end
+```
