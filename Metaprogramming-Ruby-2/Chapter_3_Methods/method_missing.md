@@ -93,7 +93,7 @@ user.email # => 同 name 属性
 
 ### 1. `respond_to?`
 
-如果用 `method_missing` 的方式动态代理了某个方法，如 `user.name`。此时，`respond_to` 会始终返回 `false`。
+如果用 `method_missing` 的方式动态代理了某个方法，如 `user.name`。此时，`respond_to?` 会始终返回 `false`。
 
 ```ruby
 class User
@@ -122,7 +122,7 @@ user.respond_to?(:name) # => true
 
 ### 2. 被遗忘的 `super`
 
-无论是重现 `method_missing` 还是 `respond_to_missing?`，都不要忘记在不满足特定条件时，call super。确保能返回正确的值，或及时抛出异常。
+无论是重写 `method_missing` 还是 `respond_to_missing?`，都不要忘记在不满足特定条件时，call super。确保能返回正确的值，或及时抛出异常。
 
 ### 3. 死循环
 
@@ -131,7 +131,8 @@ user.respond_to?(:name) # => true
 ```ruby
 class User
   def method_missing(method_name, *args)
-    send :my_email if method_name == :email
+    # 因为 send 的 my_email 方法不存在，所有会一直调用 method_missing
+    send :my_email
   end
 end
 
