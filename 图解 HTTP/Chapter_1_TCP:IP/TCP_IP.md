@@ -24,6 +24,6 @@ https://blog.csdn.net/shawjan/article/details/45117945
 
 ### 三次握手
 
-三次握手是在做什么？
+三次握手是在做什么？可靠的传输和三次握手有什么关系？
 
 ### 四次挥手
