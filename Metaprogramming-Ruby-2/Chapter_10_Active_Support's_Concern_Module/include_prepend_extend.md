@@ -16,9 +16,9 @@
 
 ```ruby
 module MyModule
-	include A
-	include B
-	include C
+  include A
+  include B
+  include C
 end
 
 
@@ -31,22 +31,22 @@ MyModule.ancestors # => MyModule → C → B → A
 
 ```ruby
 module A
-	def a; puts "module A method"; end
+  def a; puts "module A method"; end
 end
 
 module B
-	def b; puts "module B method"; end
+  def b; puts "module B method"; end
 end
 
 class MyClass
-	include A
-	extend B
+  include A
+  extend B
 end
 
 class OurClass
-	class << self
-		include B
-	end
+  class << self
+    include B
+  end
 end
 
 MyClass.new.a
@@ -61,23 +61,23 @@ OurClass.b
 
 ```ruby
 module A
-	# 钩子方法，在自己被 include 之后调用
-	# @params base [Module] 调用 include 的类，如 MyClass
-	def self.included(base)
-		# 将定义在 ClassMethod 中的方法扩展为调用类的类方法
-		base.extend ClassMethod
-	end
+  # 钩子方法，在自己被 include 之后调用
+  # @params base [Module] 调用 include 的类，如 MyClass
+  def self.included(base)
+    # 将定义在 ClassMethod 中的方法扩展为调用类的类方法
+    base.extend ClassMethod
+  end
 
-	# 没有在 ClassMethod 中的方法，因为是 include，所以扩展为实例方法
-	def a; puts "a"; end
+  # 没有在 ClassMethod 中的方法，因为是 include，所以扩展为实例方法
+  def a; puts "a"; end
 
-	module ClassMethod
-		def b; puts "b"; end
-	end
+  module ClassMethod
+    def b; puts "b"; end
+  end
 end
 
 class MyClass
-	include A
+  include A
 end
 
 MyClass.new.a
